@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #302e2b;
+  color: #ffff;
+  margin: 2rem;
+  overflow-y: hidden;
+}
+
+.overview-title {
+  background-color: #21201e;
+}
+.overview-container {
+  background-color: #262522;
+}
