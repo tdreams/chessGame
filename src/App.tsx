@@ -5,7 +5,7 @@ import Overview from "./components/Overview";
 function App() {
   return (
     <div className="flex gap-6 h-screen overflow-hidden">
-      <ChessBoard />
+      <ChessBoard rows={8} cols={8} />
       <Overview />
     </div>
   );
