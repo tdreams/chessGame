@@ -3,27 +3,33 @@ import { pieceImages } from "@/assets/pieces/staunty";
 
 interface BoxProps {
   isBlack: boolean;
-  row: number;
   col: string;
+  row: number;
   showColumnLabel: boolean;
   showRowLabel: boolean;
   className?: string;
-  piece?: Piece;
+  piece?: Piece | null;
   onClick: () => void;
   isValidMove: boolean;
+  onDragStart?: (e: React.DragEvent<HTMLDivElement>) => void;
+  onDragOver?: (e: React.DragEvent<HTMLDivElement>) => void;
+  onDrop?: (e: React.DragEvent<HTMLDivElement>) => void;
 }
 
 function Box({
   isBlack,
-  row,
   col,
+  row,
   showColumnLabel,
   showRowLabel,
   className = "",
   piece,
   onClick,
   isValidMove,
-}: BoxProps) {
+}: /* onDragStart,
+  onDragOver,
+  onDrop, */
+BoxProps) {
   return (
     <div
       className={`relative flex justify-center items-center aspect-square border-none  ${
@@ -32,6 +38,10 @@ function Box({
           : "bg-[oklch(93.82%_0.0777439208785937_89.69720269349494)]"
       } ${isValidMove ? "cursor-pointer" : ""} ${className}`} // Highlight valid moves
       onClick={onClick}
+      /* onDragStart={onDragStart}
+      onDragOver={onDragOver}
+      onDrop={onDrop}
+      draggable={!!piece} */
     >
       {/* Show a small circle in the middle if it's a valid move */}
       {isValidMove && (
@@ -40,7 +50,7 @@ function Box({
 
       {/* Show a ring around the piece if it's a valid move and a piece is present */}
       {isValidMove && piece && (
-        <div className="absolute w-[86%] h-[86%] ring-8 ring-white/70 rounded-full z-20 "></div>
+        <div className="absolute w-[86%] h-[86%] ring-8 ring-white/70 rounded-full z-50"></div>
       )}
 
       {/* Render the piece image */}
@@ -48,7 +58,7 @@ function Box({
         <img
           src={pieceImages[piece.icon]}
           alt={`${piece.color} ${piece.type}`}
-          className="w-3/4 h-3/4 z-30"
+          className="z-30 w-[90%] h-[90%]  "
         />
       )}
 

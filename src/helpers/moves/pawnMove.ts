@@ -44,8 +44,8 @@ function handlePawnMoves(
     const captureCol = col + offset;
     if (
       isInsideBoard(nextRow, captureCol) &&
-      board[nextRow][captureCol]?.color !== color &&
-      board[nextRow][captureCol]
+      board[nextRow][captureCol] && // Ensure there is a piece to capture
+      board[nextRow][captureCol]?.color !== color // Opponent's piece
     ) {
       moves.push({ row: nextRow, col: captureCol });
       console.log(`Capture move added: row ${nextRow}, col ${captureCol}`);
