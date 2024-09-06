@@ -170,7 +170,7 @@ function ChessBoard({ rows, cols }: ChessBoardProps) {
           piecesCaptured={whiteCaptured} // Display pieces captured by black (white pieces)
         />
         <div className="flex relative justify-end">
-          <div className="grid grid-cols-8 grid-rows-8 w-[80vmin] h-[80vmin] bg-transparent overflow-hidden rounded-[0.4rem]">
+          <div className="grid grid-cols-8 grid-rows-8 w-[80vmin] h-[80vmin] bg-transparent overflow-hidden rounded-[0.4rem] mt-8">
             {createBoard(
               0,
               0,

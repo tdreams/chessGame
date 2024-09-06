@@ -70,14 +70,11 @@ export function handleMovePiece({
     );
 
     if (enPassantTargetPiece) {
-      const enPassantCapturePiece = {
-        type: enPassantTargetPiece.type,
-        color: enPassantTargetPiece.color,
-        position: enPassantTargetPiece.position,
-      };
       console.log(
-        `En passant capture at: { Position: ${enPassantCapturePiece.position}, Type: ${enPassantCapturePiece.type}, Color: ${enPassantCapturePiece.color} }`
+        `En passant capture at: Position: ${enPassantTargetPiece.position}, Type: ${enPassantTargetPiece.type}, Color: ${enPassantTargetPiece.color}`
       );
+
+      // Capture the en passant target piece
       if (selectedPieces.color === "white") {
         setBlackCaptured((prev: Piece[]) => [...prev, enPassantTargetPiece]);
       } else {
@@ -114,17 +111,21 @@ export function handleMovePiece({
       : piece
   );
 
+  // Set the updated pieces state
   setPieces(updatedPieces);
 
+  // Update the last move state
   setLastMove({
     piece: selectedPieces,
     start: [startRow, startCol],
     end: [row, col],
   });
+
+  // Clear selected piece and valid moves
   setSelectedPieces(null);
   setValidMoves([]);
 
-  // Play the sound after moving the piece
+  // Play the move sound
   if (moveSoundRef.current) {
     moveSoundRef.current.currentTime = 0;
     moveSoundRef.current.play().catch((err) => {
