@@ -7,6 +7,7 @@ import { handleMovePiece } from "@/helpers/moves/piecesMove";
 export interface ChessBoardProps {
   rows: number;
   cols: number;
+  onMove: (whiteMove?: Piece, blackMove?: Piece) => void;
 }
 
 export interface LastMove {
@@ -15,7 +16,7 @@ export interface LastMove {
   end: [number, number];
 }
 
-function ChessBoard({ rows, cols }: ChessBoardProps) {
+function ChessBoard({ rows, cols, onMove }: ChessBoardProps) {
   const [pieces, setPieces] = useState<Piece[]>(initBoard());
   const [selectedPieces, setSelectedPieces] = useState<Piece | null>(null);
   const [validMoves, setValidMoves] = useState<{ row: number; col: number }[]>(
@@ -119,6 +120,15 @@ function ChessBoard({ rows, cols }: ChessBoardProps) {
       moveSoundRef,
       piecesCaptured: { setWhiteCaptured, setBlackCaptured },
     });
+
+    // Determine which piece made the move
+    if (selectedPieces) {
+      if (selectedPieces.color === "white") {
+        onMove(selectedPieces, undefined); // White move
+      } else {
+        onMove(undefined, selectedPieces); // Black move
+      }
+    }
 
     setCurrentTurn(currentTurn === "white" ? "black" : "white");
   };

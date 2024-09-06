@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Table,
   TableBody,
@@ -5,68 +6,71 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChessPawn, faChessKnight } from "@fortawesome/free-solid-svg-icons"; // Import additional icons as needed
-import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import { Piece } from "@/helpers/boardSetup";
 
-// Define the Move data structure
-export interface Move {
-  icon: IconDefinition; // FontAwesome icon type
-  color: "white" | "black"; // Color of the piece
-  coordinate: string; // Coordinate of the move
-}
-
-// Define the HistoryMovesProps interface
 interface HistoryMovesProps {
   moves: {
-    white: Move; // White player's move
-    black: Move; // Black player's move
+    white?: Piece;
+    black?: Piece;
   }[];
 }
 
-function HistoryMoves({ moves }: HistoryMovesProps) {
+const HistoryMoves: React.FC<HistoryMovesProps> = ({ moves }) => {
+  // Initialize pairedMoves array
+  const pairedMoves: { white?: Piece; black?: Piece }[] = [];
+
+  // Recursive function to pair white and black moves
+  function addPairMoves(
+    moves: HistoryMovesProps["moves"],
+    i: number = 0,
+    pairedMoves: { white?: Piece; black?: Piece }[] = []
+  ) {
+    if (i >= moves.length) return; // Base case for recursion
+    pairedMoves.push({
+      white: moves[i]?.white,
+      black: moves[i + 1]?.black,
+    });
+    addPairMoves(moves, i + 2, pairedMoves); // Recursive call
+  }
+
+  // Call the recursive function
+  addPairMoves(moves, 0, pairedMoves);
+
+  // Determine the current move based on the number of moves played
+  const currentMove = moves.length - 1;
+
   return (
     <div className="p-4 ">
-      <Table className="w-full border-separate border-spacing-0 ">
-        <TableHeader className="bg-[#21201e]">
-          <TableRow className=" text-white">
-            <TableCell className="text-center">#</TableCell>{" "}
-            {/* Move Number Column */}
-            <TableCell className="text-center">White</TableCell>
-            <TableCell className="text-center">Black</TableCell>
+      <Table className="w-full border-separate border-spacing-0 h-[1rem] ">
+        <TableHeader className="bg-[#21201e] sticky top-0 z-10">
+          <TableRow className="text-white ">
+            <TableCell className="text-center w-1/6">#</TableCell>
+            <TableCell className="text-center w-5/12">White</TableCell>
+            <TableCell className="text-center w-5/12">Black</TableCell>
           </TableRow>
         </TableHeader>
-        <TableBody>
-          {moves.map((move, index) => (
+        <TableBody className="flex-col h-[20px] overflow-y-a">
+          {pairedMoves.map((move, index) => (
             <TableRow
               key={index}
-              className={`${index % 2 === 0 ? "!bg-[#2b2927]" : ""} `}
+              className={index % 2 === 0 ? "bg-[#2b2927]" : ""}
             >
-              {/* Move Number */}
-              <TableCell className="text-center text-gray-400">
+              <TableCell className="text-center text-gray-400 py-2">
                 {index + 1}.
               </TableCell>
-
-              {/* White Move */}
-              <TableCell className="text-center border-none ">
-                <FontAwesomeIcon
-                  icon={move.white.icon}
-                  className={`mr-2 ${
-                    move.white.color === "white" ? "text-white" : "text-black"
-                  }`}
-                />
-                {move.white.coordinate}
+              <TableCell
+                className={`text-center border-none py-2
+                  ${currentMove === index * 2 ? "bg-white text-black" : ""}`}
+              >
+                {renderMove(move.white)}
               </TableCell>
-
-              {/* Black Move */}
-              <TableCell className="text-center">
-                <FontAwesomeIcon
-                  icon={move.black.icon}
-                  className={`mr-2 ${
-                    move.black.color === "black" ? "text-black" : "text-white"
+              <TableCell
+                className={`text-center py-2
+                  ${
+                    currentMove === index * 2 + 1 ? "bg-black text-white" : ""
                   }`}
-                />
-                {move.black.coordinate}
+              >
+                {renderMove(move.black)}
               </TableCell>
             </TableRow>
           ))}
@@ -74,6 +78,21 @@ function HistoryMoves({ moves }: HistoryMovesProps) {
       </Table>
     </div>
   );
-}
+};
+
+// Helper function to render a move
+const renderMove = (piece?: Piece) => {
+  if (!piece) return "-";
+  return (
+    <div className="flex items-center justify-center">
+      <img
+        src={`/src/assets/pieces/staunty/${piece.icon}.svg`}
+        alt={`${piece.type} ${piece.color}`}
+        className="w-6 h-6 mr-2"
+      />
+      <span>{piece.position}</span>
+    </div>
+  );
+};
 
 export default HistoryMoves;

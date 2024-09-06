@@ -1,11 +1,6 @@
 import React from "react";
 import { Piece } from "./boardSetup";
-import handlePawnMoves from "./moves/pawnMove";
-import { Move } from "./moves/getValidMoves";
-import { handleRookMoves } from "./moves/rookMoves";
-import { handleKnightMoves } from "./moves/knigthMoves";
-import { handleBishopMoves } from "./moves/bishopMoves";
-import { handleQueenMoves } from "./moves/queenMoves";
+import { Move, getValidMove } from "./moves/getValidMoves";
 
 // Define the function type for setting selected piece and valid moves
 type SetStateFunction<T> = React.Dispatch<React.SetStateAction<T>>;
@@ -21,83 +16,27 @@ export const handleSelectPiece = (
     end: [number, number];
   } | null
 ) => {
-  /* console.log("Selected piece:", piece);
-  console.log("Board state in handleSelectPiece:", pieces); */
   setSelectedPiece(piece); // Set the selected piece
 
-  // If the selected piece is a pawn, calculate its valid moves
-  if (piece?.type === "pawn") {
-    const row = 8 - parseInt(piece.position[1]); // Convert rank to row
-    const col = piece.position.charCodeAt(0) - 97; // Convert file to column
-    /* console.log("Piece position:", piece.position, "Row:", row, "Col:", col); */
-    // Call handlePawnMoves and get the result
-    const validMoves: Move[] = handlePawnMoves(
-      piece,
-      row,
-      col,
-      pieces,
-      lastMove,
-      piece.color
-    );
-    console.log("Valid moves for the selected piece:", validMoves);
-    setValidMoves(validMoves); // Set the valid moves
-  } else if (piece?.type === "rook") {
-    const row = 8 - parseInt(piece.position[1]); // Convert rank to row
-    const col = piece.position.charCodeAt(0) - 97; // Convert file to column
-    /* console.log("Piece position:", piece.position, "Row:", row, "Col:", col); */
-    // Call handlePawnMoves and get the result
-    const validMoves: Move[] = handleRookMoves(
-      piece,
-      row,
-      col,
-      pieces,
-      piece.color
-    );
-    console.log("Valid moves for the selected piece:", validMoves);
-    setValidMoves(validMoves); // Set the valid moves
-  } else if (piece?.type === "knight") {
-    const row = 8 - parseInt(piece.position[1]); // Convert rank to row
-    const col = piece.position.charCodeAt(0) - 97; // Convert file to column
-    /* console.log("Piece position:", piece.position, "Row:", row, "Col:", col); */
-    // Call handlePawnMoves and get the result
-    const validMoves: Move[] = handleKnightMoves(
-      piece,
-      row,
-      col,
-      pieces,
-      piece.color
-    );
-    console.log("Valid moves for the selected piece:", validMoves);
-    setValidMoves(validMoves); // Set the valid moves
-  } else if (piece?.type === "bishop") {
-    const row = 8 - parseInt(piece.position[1]); // Convert rank to row
-    const col = piece.position.charCodeAt(0) - 97; // Convert file to column
-    /* console.log("Piece position:", piece.position, "Row:", row, "Col:", col); */
-    // Call handlePawnMoves and get the result
-    const validMoves: Move[] = handleBishopMoves(
-      piece,
-      row,
-      col,
-      pieces,
-      piece.color
-    );
-    console.log("Valid moves for the selected piece:", validMoves);
-    setValidMoves(validMoves); // Set the valid moves
-  } else if (piece?.type === "queen") {
-    const row = 8 - parseInt(piece.position[1]); // Convert rank to row
-    const col = piece.position.charCodeAt(0) - 97; // Convert file to column
-    /* console.log("Piece position:", piece.position, "Row:", row, "Col:", col); */
-    // Call handlePawnMoves and get the result
-    const validMoves: Move[] = handleQueenMoves(
-      piece,
-      row,
-      col,
-      pieces,
-      piece.color
-    );
-    console.log("Valid moves for the selected piece:", validMoves);
-    setValidMoves(validMoves); // Set the valid moves
-  } else {
-    setValidMoves([]); // Clear valid moves for non-pawn pieces (or handle other pieces)
+  // If there's no piece selected, clear valid moves
+  if (!piece) {
+    setValidMoves([]);
+    return;
   }
+
+  // Get row and column indices from the piece's position
+  const { row, col } = getRowAndColFromPosition(piece.position);
+
+  // Get the valid moves using the centralized getValidMove function
+  const validMoves: Move[] = getValidMove(piece, row, col, lastMove, pieces);
+
+  console.log("Valid moves for the selected piece:", validMoves);
+  setValidMoves(validMoves); // Set the valid moves
 };
+
+// Helper function to convert chess notation position (like 'e4') to row and column indices
+function getRowAndColFromPosition(position: string) {
+  const row = 8 - parseInt(position[1]); // Convert rank to row
+  const col = position.charCodeAt(0) - 97; // Convert file to column
+  return { row, col };
+}

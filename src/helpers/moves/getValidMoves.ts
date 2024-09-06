@@ -1,5 +1,6 @@
 import { Piece } from "../boardSetup";
 import { handleBishopMoves } from "./bishopMoves";
+import { handleKingMoves } from "./kingMoves";
 import { handleKnightMoves } from "./knigthMoves";
 import handlePawnMoves from "./pawnMove";
 import { handleQueenMoves } from "./queenMoves";
@@ -50,26 +51,10 @@ export function getValidMove(
     case "queen":
       moves = handleQueenMoves(piece, row, col, board, color);
       break;
-    /*  // Handle other pieces like rook, knight, bishop, queen, and king
-      case "rook":
-        // Call handleRookMoves and return its result
-        return handleRookMoves(row, col, board, color);
-  
-      case "knight":
-        // Call handleKnightMoves and return its result
-        return handleKnightMoves(row, col, board, color);
-  
-      case "bishop":
-        // Call handleBishopMoves and return its result
-        return handleBishopMoves(row, col, board, color);
-  
-      case "queen":
-        // Call handleQueenMoves and return its result
-        return handleQueenMoves(row, col, board, color);
-  
-      case "king":
-        // Call handleKingMoves and return its result
-        return handleKingMoves(row, col, board, color); */
+    //handle queen moves
+    case "king":
+      moves = handleKingMoves(piece, row, col, board, color);
+      break;
 
     default:
       break; // Return an empty array for undefined types

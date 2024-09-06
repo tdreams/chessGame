@@ -1,11 +1,10 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import React, { useCallback, useState } from "react";
-import HistoryMoves, { Move } from "./HistoryMoves";
 import NewGame from "./NewGame";
 
-import { faChessPawn, faChessKnight } from "@fortawesome/free-solid-svg-icons"; // Import additional icons if needed placeholder for
+import { Piece } from "@/helpers/boardSetup";
+import HistoryMoves from "./HistoryMoves";
+import React from "react";
 
 interface MenuItem {
   icon: React.ElementType;
@@ -16,55 +15,17 @@ interface MenuItem {
 interface OverviewProps {
   menuItem: MenuItem[];
   setSelectedItem: React.Dispatch<React.SetStateAction<number>>;
+  moves: { white?: Piece; black?: Piece }[]; // Update to receive moves with pieces
 }
 
-//placeholder for the moves
-
-function OverviewTab({ menuItem, setSelectedItem }: OverviewProps) {
-  const [moves, setMoves] = useState<
-    {
-      white: Move;
-      black: Move;
-    }[]
-  >([
-    {
-      white: { icon: faChessPawn, color: "white", coordinate: "d5" },
-      black: { icon: faChessKnight, color: "black", coordinate: "f6" },
-    },
-    {
-      white: { icon: faChessPawn, color: "white", coordinate: "d5" },
-      black: { icon: faChessKnight, color: "black", coordinate: "f6" },
-    },
-    {
-      white: { icon: faChessPawn, color: "white", coordinate: "d5" },
-      black: { icon: faChessKnight, color: "black", coordinate: "f6" },
-    },
-    {
-      white: { icon: faChessPawn, color: "white", coordinate: "d5" },
-      black: { icon: faChessKnight, color: "black", coordinate: "f6" },
-    },
-    {
-      white: { icon: faChessPawn, color: "white", coordinate: "d5" },
-      black: { icon: faChessKnight, color: "black", coordinate: "f6" },
-    },
-    {
-      white: { icon: faChessPawn, color: "white", coordinate: "d5" },
-      black: { icon: faChessKnight, color: "black", coordinate: "f6" },
-    },
-  ]);
-  const handleNewMove = (whiteMove: Move, blackMove: Move) => {
-    setMoves((prevMoves) => [
-      ...prevMoves,
-      { white: whiteMove, black: blackMove },
-    ]);
-  };
+function OverviewTab({ menuItem, setSelectedItem, moves }: OverviewProps) {
   return (
     <Tabs
       defaultValue="0"
       className="w-full"
       onValueChange={(value) => setSelectedItem(Number(value))}
     >
-      <TabsList className="flex justify-around items-center w-full p-0 m-0 bg-transparent">
+      <TabsList className="flex justify-around items-center w-full p-0 m-0 bg-transparent ">
         {menuItem.map(({ icon: IconComponent }, index) => (
           <React.Fragment key={index}>
             <TabsTrigger
@@ -85,7 +46,10 @@ function OverviewTab({ menuItem, setSelectedItem }: OverviewProps) {
 
       {menuItem.map(({ label }, index) => (
         <TabsContent key={index} value={index.toString()}>
-          {label === "Review" && <HistoryMoves moves={moves} />}
+          <div className="max-h-[20rem] overflow-y-auto scrollbar-hide">
+            {label === "Review" && <HistoryMoves moves={moves} />}
+          </div>
+
           {label === "New Game" && <NewGame />}
         </TabsContent>
       ))}
