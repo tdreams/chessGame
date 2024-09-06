@@ -1,4 +1,5 @@
 import { Piece } from "../boardSetup";
+import { handleKnightMoves } from "./knigthMoves";
 import handlePawnMoves from "./pawnMove";
 import { handleRookMoves } from "./rookMoves";
 
@@ -32,6 +33,11 @@ export function getValidMove(
     //handle Rook moves
     case "rook":
       moves = handleRookMoves(piece, row, col, board, color);
+      break;
+
+    //handle knight moves
+    case "knight":
+      moves = handleKnightMoves(piece, row, col, board, color);
       break;
     /*  // Handle other pieces like rook, knight, bishop, queen, and king
       case "rook":

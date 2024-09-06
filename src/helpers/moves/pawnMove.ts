@@ -103,7 +103,7 @@ function handlePawnMoves(
 }
 
 // Helper function to check if the position is within the board boundaries
-function isInsideBoard(row: number, col: number): boolean {
+export function isInsideBoard(row: number, col: number): boolean {
   return row >= 0 && row < 8 && col >= 0 && col < 8;
 }
 

@@ -3,6 +3,7 @@ import { Piece } from "./boardSetup";
 import handlePawnMoves from "./moves/pawnMove";
 import { Move } from "./moves/getValidMoves";
 import { handleRookMoves } from "./moves/rookMoves";
+import { handleKnightMoves } from "./moves/knigthMoves";
 
 // Define the function type for setting selected piece and valid moves
 type SetStateFunction<T> = React.Dispatch<React.SetStateAction<T>>;
@@ -44,6 +45,20 @@ export const handleSelectPiece = (
     /* console.log("Piece position:", piece.position, "Row:", row, "Col:", col); */
     // Call handlePawnMoves and get the result
     const validMoves: Move[] = handleRookMoves(
+      piece,
+      row,
+      col,
+      pieces,
+      piece.color
+    );
+    console.log("Valid moves for the selected piece:", validMoves);
+    setValidMoves(validMoves); // Set the valid moves
+  } else if (piece?.type === "knight") {
+    const row = 8 - parseInt(piece.position[1]); // Convert rank to row
+    const col = piece.position.charCodeAt(0) - 97; // Convert file to column
+    /* console.log("Piece position:", piece.position, "Row:", row, "Col:", col); */
+    // Call handlePawnMoves and get the result
+    const validMoves: Move[] = handleKnightMoves(
       piece,
       row,
       col,
